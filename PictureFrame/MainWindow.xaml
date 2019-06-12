@@ -1,0 +1,22 @@
+﻿<Window x:Class="PictureFrame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PictureFrame"
+        mc:Ignorable="d"
+				Title="PictureFrame"
+        Width="{Binding WindowWidth, Mode=TwoWay}" 
+				Height="{Binding WindowHeight, Mode=TwoWay}"
+				Top="{Binding WindowTop, Mode=TwoWay}"
+				Left="{Binding WindowLeft, Mode=TwoWay}">
+	<Window.DataContext>MainViewModel</Window.DataContext>
+	<Grid>
+		<Image HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
+			<Image.Source>
+				<BitmapImage DecodePixelWidth="{Binding ImageWidth}" UriSource="{Binding CurrentImage}"/>
+			</Image.Source>
+		</Image> 
+
+	</Grid>
+</Window>
