@@ -24,6 +24,14 @@ namespace PictureFrame
 			{
 				MessageBox.Show("Couldn't initialise:" + e.ToString(), "Initialisation error");
 			}
+
+			_currentImage = "test.jpg";
+			_previousImage = new Command(ExecutePreviousImage);
+			_nextImage = new Command(ExecuteNextImage);
+			_openImageInFolder = new Command(ExecuteOpenImageInFolder);
+			_likeImage = new Command(ExecuteLikeImage);
+			_dislikeImage = new Command(ExecuteDislikeImage);
+			_openMenu = new Command(ExecuteOpenMenu);
 		}
 
 		~MainViewModel()
@@ -34,6 +42,12 @@ namespace PictureFrame
 		private System.Threading.Timer SaveTimer;
 		private DirectoryInfo _picturesDir;
 		private string _currentImage;
+		private Command _previousImage;
+		private Command _nextImage;
+		private Command _openImageInFolder;
+		private Command _likeImage;
+		private Command _dislikeImage;
+		private Command _openMenu;
 
 		public DirectoryInfo PicturesDir
 		{
@@ -126,6 +140,61 @@ namespace PictureFrame
 		void RestartTimer()
 		{
 			SaveTimer.Change(200, Timeout.Infinite);
+		}
+
+		public Command PreviousImage
+		{
+			get { return _previousImage; }
+		}
+
+		public Command NextImage
+		{
+			get { return _nextImage; }
+		}
+
+		public Command OpenImageInFolder
+		{
+			get { return _openImageInFolder; }
+		}
+
+		public Command LikeImage
+		{
+			get { return _likeImage; }
+		}
+
+		public Command DislikeImage
+		{
+			get { return _dislikeImage; }
+		}
+
+		public Command OpenMenu
+		{
+			get { return _openMenu; }
+		}
+
+		public void ExecutePreviousImage()
+		{
+
+		}
+		public void ExecuteNextImage()
+		{
+
+		}
+		public void ExecuteOpenImageInFolder()
+		{
+
+		}
+		public void ExecuteLikeImage()
+		{
+
+		}
+		public void ExecuteDislikeImage()
+		{
+
+		}
+		public void ExecuteOpenMenu()
+		{
+
 		}
 	}
 }
