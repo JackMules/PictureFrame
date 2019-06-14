@@ -113,5 +113,8 @@
   <ItemGroup>
     <Resource Include="Icons\PictureFrame.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\iconfinder_Streamline-46_185066.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
