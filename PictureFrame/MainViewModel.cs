@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace PictureFrame
 {
@@ -14,24 +15,33 @@ namespace PictureFrame
 	{
 		public MainViewModel()
 		{
-			SaveTimer = new System.Threading.Timer(new TimerCallback(DoChangeRefresh), null, Timeout.Infinite, Timeout.Infinite);
+			_previousImage = new Command(ExecutePreviousImage);
+			_nextImage = new Command(ExecuteNextImage);
+			_openImageInFolder = new Command(ExecuteOpenImageInFolder);
+			_likeImage = new Command(ExecuteLikeImage);
+			_dislikeImage = new Command(ExecuteDislikeImage);
+			_changeImagesDir = new Command(ExecuteChangeImagesDir);
+			_exit = new Command(ExecuteExit);
+
+			_period = 60;
+			_random = new Random();
+
+			_saveTimer = new System.Threading.Timer(new TimerCallback(DoChangeRefresh), null, Timeout.Infinite, Timeout.Infinite);
+
+			_pictureTimer = new System.Threading.Timer(new TimerCallback(DoNextImage), null, 0, _period * 1000);
 
 			try
 			{
-				_picturesDir = new DirectoryInfo(Properties.Settings.Default.PicturesDir);
+				_imagesDir = new DirectoryInfo(Properties.Settings.Default.ImagesDir);
 			}
 			catch (NullReferenceException e)
 			{
 				MessageBox.Show("Couldn't initialise:" + e.ToString(), "Initialisation error");
 			}
 
-			_currentImage = "test.jpg";
-			_previousImage = new Command(ExecutePreviousImage);
-			_nextImage = new Command(ExecuteNextImage);
-			_openImageInFolder = new Command(ExecuteOpenImageInFolder);
-			_likeImage = new Command(ExecuteLikeImage);
-			_dislikeImage = new Command(ExecuteDislikeImage);
-			_openMenu = new Command(ExecuteOpenMenu);
+			AddImagesToList();
+
+			CurrentIndex = Properties.Settings.Default.CurrentIndex;
 		}
 
 		~MainViewModel()
@@ -39,26 +49,80 @@ namespace PictureFrame
 			Properties.Settings.Default.Save();
 		}
 
-		private System.Threading.Timer SaveTimer;
-		private DirectoryInfo _picturesDir;
+		private Random _random;
+		private System.Threading.Timer _pictureTimer;
+		private System.Threading.Timer _saveTimer;
+		private DirectoryInfo _imagesDir;
+		private int _currentIndex;
 		private string _currentImage;
+		private List<FileInfo> _images;
+		private bool _randomise;
+		private int _period;
 		private Command _previousImage;
 		private Command _nextImage;
 		private Command _openImageInFolder;
 		private Command _likeImage;
 		private Command _dislikeImage;
-		private Command _openMenu;
+		private Command _changeImagesDir;
+		private Command _exit;
 
-		public DirectoryInfo PicturesDir
+		public DirectoryInfo ImagesDir
 		{
-			get { return _picturesDir; }
-			set { SetField(ref _picturesDir, value); }
+			get { return _imagesDir; }
+			set
+			{
+				SetField(ref _imagesDir, value);
+				Properties.Settings.Default.ImagesDir = value.FullName;
+			}
+		}
+
+		public int CurrentIndex
+		{
+			get { return _currentIndex; }
+			set
+			{
+				if (Images.Count > 0)
+				{
+					if (value < 0)
+					{
+						value = Images.Count - 1;
+					}
+					else if (value >= Images.Count)
+					{
+						value = 0;
+					}
+					SetField(ref _currentIndex, value);
+
+					CurrentImage = Images[_currentIndex].FullName;
+					Properties.Settings.Default.CurrentIndex = value;
+				}
+			}
 		}
 
 		public string CurrentImage
 		{
 			get { return _currentImage; }
-			set { SetField(ref _currentImage, value); }
+			set
+			{
+				SetField(ref _currentImage, value);
+				Properties.Settings.Default.CurrentImage = value;
+			}
+		}
+
+		public List<FileInfo> Images
+		{
+			get { return _images; }
+			set { SetField(ref _images, value); }
+		}
+
+		public bool Randomise
+		{
+			get { return _randomise; }
+			set
+			{
+				SetField(ref _randomise, value);
+				Properties.Settings.Default.Randomise = value;
+			}
 		}
 
 		public double WindowWidth
@@ -73,7 +137,7 @@ namespace PictureFrame
 				{
 					Properties.Settings.Default.Width = value;
 					NotifyPropertyChanged("WindowWidth");
-					RestartTimer();
+					RestartSaveTimer();
 				}
 			}
 		}
@@ -90,7 +154,7 @@ namespace PictureFrame
 				{
 					Properties.Settings.Default.Height = value;
 					NotifyPropertyChanged("WindowHeight");
-					RestartTimer();
+					RestartSaveTimer();
 				}
 			}
 		}
@@ -107,7 +171,7 @@ namespace PictureFrame
 				{
 					Properties.Settings.Default.Top = value;
 					NotifyPropertyChanged("WindowTop");
-					RestartTimer();
+					RestartSaveTimer();
 				}
 			}
 		}
@@ -124,7 +188,7 @@ namespace PictureFrame
 				{
 					Properties.Settings.Default.Left = value;
 					NotifyPropertyChanged("WindowLeft");
-					RestartTimer();
+					RestartSaveTimer();
 				}
 			}
 		}
@@ -137,9 +201,17 @@ namespace PictureFrame
 			}));
 		}
 
-		void RestartTimer()
+		void RestartSaveTimer()
 		{
-			SaveTimer.Change(200, Timeout.Infinite);
+			_saveTimer.Change(200, Timeout.Infinite);
+		}
+
+		void DoNextImage(object state)
+		{
+			System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+			{
+				ExecuteNextImage();
+			}));
 		}
 
 		public Command PreviousImage
@@ -167,34 +239,89 @@ namespace PictureFrame
 			get { return _dislikeImage; }
 		}
 
-		public Command OpenMenu
+		public Command ChangeImagesDir
 		{
-			get { return _openMenu; }
+			get { return _changeImagesDir; }
+		}
+
+		public Command Exit
+		{
+			get { return _exit; }
 		}
 
 		public void ExecutePreviousImage()
 		{
-
+			--CurrentIndex;
 		}
+
 		public void ExecuteNextImage()
 		{
-
+			if (Randomise)
+			{
+				CurrentIndex = _random.Next(Images.Count - 1);
+			}
+			else
+			{
+				++CurrentIndex;
+			}
 		}
+
 		public void ExecuteOpenImageInFolder()
 		{
-
+			if (Images[CurrentIndex].Exists)
+			{
+				string arg = "/select, \"" + Images[CurrentIndex].FullName + "\"";
+				Process.Start("explorer.exe", arg);
+			}
 		}
+
 		public void ExecuteLikeImage()
 		{
 
 		}
+
 		public void ExecuteDislikeImage()
 		{
 
 		}
-		public void ExecuteOpenMenu()
-		{
 
+		public void ExecuteChangeImagesDir()
+		{
+			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+			folderBrowserDialog.Description = "Select the directory containing your images.";
+			folderBrowserDialog.ShowNewFolderButton = false;
+
+			DialogResult result = folderBrowserDialog.ShowDialog();
+			if (result == DialogResult.OK)
+			{
+				ImagesDir = new DirectoryInfo(folderBrowserDialog.SelectedPath);
+			}
+
+			AddImagesToList();
+
+			CurrentIndex = 0;
+		}
+
+		public void AddImagesToList()
+		{
+			Images = new List<FileInfo>();
+
+			foreach (FileInfo file in ImagesDir.GetFiles())
+			{
+				if (file.Extension == ".jpg" ||
+						file.Extension == ".jpeg" ||
+						file.Extension == ".png" ||
+						file.Extension == ".gif" ||
+						file.Extension == ".bmp")
+				{
+					Images.Add(file);
+				}
+			}
+		}
+
+		public void ExecuteExit()
+		{
+			System.Windows.Application.Current.Shutdown();
 		}
 	}
 }

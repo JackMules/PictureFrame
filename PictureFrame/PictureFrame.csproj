@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icons\iconfinder_Streamline-46_185066.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -97,6 +100,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\iconfinder_arrow-left-01_186410.png" />
+    <Resource Include="Icons\iconfinder_arrow-right-01_186409.png" />
+    <Resource Include="Icons\iconfinder_dislike-01_186406.png" />
+    <Resource Include="Icons\iconfinder_folder-01_186404.png" />
+    <Resource Include="Icons\iconfinder_like-01_186399.png" />
+    <Resource Include="Icons\iconfinder_list-01_186395.png" />
+    <Resource Include="Icons\iconfinder_remove-01_186389.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\PictureFrame.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

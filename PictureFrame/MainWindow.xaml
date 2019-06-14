@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PictureFrame"
         mc:Ignorable="d"
+				x:Name="mainWindow"
 				Title="PictureFrame"
 				WindowStyle="None"
 				ResizeMode="CanResizeWithGrip"
@@ -16,46 +17,49 @@
 	<Window.DataContext>
 		<local:MainViewModel/>
 	</Window.DataContext>
-	<Grid x:Name="baseGrid">
-		<Image HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
-			<Image.Source>
-				<BitmapImage DecodePixelWidth="{Binding WindowWidth}" UriSource="{Binding CurrentImage}"/>
-			</Image.Source>
-		</Image>
+	<Grid Background="Black">
+		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Source="{Binding CurrentImage}"
+					 RenderOptions.BitmapScalingMode="HighQuality"/>
 		<!-- Iconset: https://www.iconfinder.com/iconsets/faticons -->
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5">
 			<StackPanel.Style>
 				<Style TargetType="{x:Type StackPanel}">
 					<Style.Triggers>
-						<DataTrigger Binding="{Binding ElementName=baseGrid, Path=IsMouseOver}" Value="True">
-							<!-- <Setter Property="Visibility" Value="Visible"/>-->
-							<Setter Property="Opacity" Value="1"/>
+						<DataTrigger Binding="{Binding ElementName=mainWindow, Path=IsMouseOver}" Value="True">
+							<Setter Property="Visibility" Value="Visible"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding ElementName=baseGrid, Path=IsMouseOver}" Value="False">
-							<!-- <Setter Property="Visibility" Value="Collapsed"/>-->
-							<Setter Property="Opacity" Value="0.25"/>
+						<DataTrigger Binding="{Binding ElementName=mainWindow, Path=IsMouseOver}" Value="False">
+							<Setter Property="Visibility" Value="Collapsed"/>
 						</DataTrigger>
 					</Style.Triggers>
 				</Style>
 			</StackPanel.Style>
-			<Button Command="{Binding PreviousImage}" Height="40" Margin="5">
-				<Image Source="iconfinder_arrow-left-01_186410.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			</Button>
-			<Button Command="{Binding NextImage}" Height="40" Margin="5">
-				<Image Source="iconfinder_arrow-right-01_186409.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			</Button>
-			<Button Command="{Binding OpenImageInFolder}" Height="40" Margin="5">
-				<Image Source="iconfinder_folder-01_186404.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			</Button>
-			<Button Command="{Binding LikeImage}" Height="40" Margin="5">
-				<Image Source="iconfinder_like-01_186399.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			</Button>
-			<Button Command="{Binding DislikeImage}" Height="40" Margin="5">
-				<Image Source="iconfinder_dislike-01_186406.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			</Button>
-			<Button Command="{Binding OpenMenu}" Height="40" Margin="5">
-				<Image Source="iconfinder_list-01_186395.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			</Button>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<Button Command="{Binding PreviousImage}" Height="40" Margin="5">
+					<Image Source="Icons/iconfinder_arrow-left-01_186410.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Button>
+				<Button Command="{Binding NextImage}" Height="40" Margin="5">
+					<Image Source="Icons/iconfinder_arrow-right-01_186409.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Button>
+				<Button Command="{Binding OpenImageInFolder}" Height="40" Margin="5">
+					<Image Source="Icons/iconfinder_folder-01_186404.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Button>
+				<Button Command="{Binding LikeImage}" Height="40" Margin="5">
+					<Image Source="Icons/iconfinder_like-01_186399.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Button>
+				<Button Command="{Binding DislikeImage}" Height="40" Margin="5">
+					<Image Source="Icons/iconfinder_dislike-01_186406.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Button>
+			</StackPanel>
+			<Label Content="{Binding CurrentImage}" Foreground="White"/>
 		</StackPanel>
+		
 	</Grid>
+	<Window.ContextMenu>
+		<ContextMenu>
+			<MenuItem Header="_Randomise" IsCheckable="True" IsChecked="{Binding Randomise}"/>
+			<MenuItem Header="_Change Images Directory" Command="{Binding ChangeImagesDir}"/>
+			<MenuItem Header="E_xit" Command="{Binding Exit}"/>
+		</ContextMenu>
+	</Window.ContextMenu>
 </Window>

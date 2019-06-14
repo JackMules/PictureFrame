@@ -14,8 +14,17 @@
     <Setting Name="Left" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="PicturesDir" Type="System.String" Scope="User">
+    <Setting Name="ImagesDir" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\</Value>
+    </Setting>
+    <Setting Name="CurrentImage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Icons\PictureFrame.png</Value>
+    </Setting>
+    <Setting Name="CurrentIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Randomise" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

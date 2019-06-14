@@ -74,12 +74,48 @@ namespace PictureFrame.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\")]
-        public string PicturesDir {
+        public string ImagesDir {
             get {
-                return ((string)(this["PicturesDir"]));
+                return ((string)(this["ImagesDir"]));
             }
             set {
-                this["PicturesDir"] = value;
+                this["ImagesDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Icons\\PictureFrame.png")]
+        public string CurrentImage {
+            get {
+                return ((string)(this["CurrentImage"]));
+            }
+            set {
+                this["CurrentImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CurrentIndex {
+            get {
+                return ((int)(this["CurrentIndex"]));
+            }
+            set {
+                this["CurrentIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Randomise {
+            get {
+                return ((bool)(this["Randomise"]));
+            }
+            set {
+                this["Randomise"] = value;
             }
         }
     }
