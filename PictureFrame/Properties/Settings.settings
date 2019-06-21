@@ -26,5 +26,8 @@
     <Setting Name="Randomise" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Stretch" Type="System.Windows.Media.Stretch" Scope="User">
+      <Value Profile="(Default)">Uniform</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

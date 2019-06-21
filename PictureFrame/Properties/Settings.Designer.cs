@@ -118,5 +118,17 @@ namespace PictureFrame.Properties {
                 this["Randomise"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Uniform")]
+        public global::System.Windows.Media.Stretch Stretch {
+            get {
+                return ((global::System.Windows.Media.Stretch)(this["Stretch"]));
+            }
+            set {
+                this["Stretch"] = value;
+            }
+        }
     }
 }

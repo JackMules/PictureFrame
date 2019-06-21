@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Diagnostics;
 
 namespace PictureFrame
@@ -25,6 +26,9 @@ namespace PictureFrame
 
 			_period = 60;
 			_random = new Random();
+
+			_randomise = Properties.Settings.Default.Randomise;
+			_stretch = Properties.Settings.Default.Stretch;
 
 			_saveTimer = new System.Threading.Timer(new TimerCallback(DoChangeRefresh), null, Timeout.Infinite, Timeout.Infinite);
 
@@ -55,9 +59,11 @@ namespace PictureFrame
 		private DirectoryInfo _imagesDir;
 		private int _currentIndex;
 		private string _currentImage;
+		private string _currentImageName;
 		private List<FileInfo> _images;
 		private bool _randomise;
 		private int _period;
+		private Stretch _stretch;
 		private Command _previousImage;
 		private Command _nextImage;
 		private Command _openImageInFolder;
@@ -94,6 +100,7 @@ namespace PictureFrame
 					SetField(ref _currentIndex, value);
 
 					CurrentImage = Images[_currentIndex].FullName;
+					CurrentImageName = Images[_currentIndex].Name;
 					Properties.Settings.Default.CurrentIndex = value;
 				}
 			}
@@ -106,6 +113,38 @@ namespace PictureFrame
 			{
 				SetField(ref _currentImage, value);
 				Properties.Settings.Default.CurrentImage = value;
+			}
+		}
+
+		public string CurrentImageName
+		{
+			get { return _currentImageName; }
+			set { SetField(ref _currentImageName, value); }
+		}
+
+		public bool Fill
+		{
+			get { return Stretch == Stretch.UniformToFill; }
+			set
+			{
+				if (value)
+				{
+					Stretch = Stretch.UniformToFill;
+				}
+				else
+				{
+					Stretch = Stretch.Uniform;
+				}
+			}
+		}
+
+		public Stretch Stretch
+		{
+			get { return _stretch; }
+			set
+			{
+				SetField(ref _stretch, value);
+				Properties.Settings.Default.Stretch = value;
 			}
 		}
 
