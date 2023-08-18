@@ -71,6 +71,7 @@ namespace PictureFrame
 		private Command _dislikeImage;
 		private Command _changeImagesDir;
 		private Command _exit;
+		private Queue<int> _prevImages;
 
 		public DirectoryInfo ImagesDir
 		{
@@ -290,13 +291,18 @@ namespace PictureFrame
 
 		public void ExecutePreviousImage()
 		{
-			--CurrentIndex;
+			CurrentIndex = _prevImages.Last();
 		}
 
 		public void ExecuteNextImage()
 		{
 			if (Randomise)
 			{
+				_prevImages.Enqueue(CurrentIndex);
+				if (_prevImages.Count > 100)
+				{
+					_prevImages.Dequeue();
+				}
 				CurrentIndex = _random.Next(Images.Count - 1);
 			}
 			else
@@ -307,7 +313,8 @@ namespace PictureFrame
 
 		public void ExecuteOpenImageInFolder()
 		{
-			if (Images[CurrentIndex].Exists)
+			if (Images.Count > 0 &&
+				Images[CurrentIndex].Exists)
 			{
 				string arg = "/select, \"" + Images[CurrentIndex].FullName + "\"";
 				Process.Start("explorer.exe", arg);
